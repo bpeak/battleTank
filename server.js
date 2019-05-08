@@ -60,12 +60,15 @@ const shots = []
 io.on('connection', function(socket){
     if(isSetIntervaling === false){
         setInterval(() => {
+            for(let key in users){
+                users[key].updatePosition()
+            }
             io.emit("state-new", {
                 users,
                 maps,
                 shots,
             })
-        }, 1000 / 60)
+        }, 16)
     }
 
     users[socket.id] = new User({
@@ -101,7 +104,8 @@ io.on('connection', function(socket){
         for(let socketId in users){
             if(socketId === mySocketId){
                 const { sinE, cosE } = data
-                users[socketId].updatePosition({ sinE, cosE })
+                users[socketId].updateDirection({ sinE, cosE })
+                // users[socketId].updatePosition({ sinE, cosE })
                 break
             }
         }
@@ -164,9 +168,34 @@ function User({
     this.cosE = 0
 }
 
-const speed = 10
+const speed = 2
 
-User.prototype.updatePosition = function({
+User.prototype.updateDirection = function({
+    sinE,
+    cosE,
+}){
+    this.sinE = sinE
+    this.cosE = cosE
+}
+
+User.prototype.updatePosition = function(){
+    const sinE = this.sinE
+    const cosE = this.cosE
+    const nextX = this.x + cosE * speed
+    const nextY = this.y + sinE * speed
+    if(nextX < 0 + tileW / 2 || nextX > canvasWidth - tileW / 2){
+        
+    } else {
+        this.x = nextX
+    }
+    if(nextY < 0 + tileH / 2 || nextY > canvasHeight - tileH / 2){
+
+    } else {
+        this.y = nextY
+    }
+}
+
+User.prototype.updatePosition2 = function({
     sinE,
     cosE,
 }){

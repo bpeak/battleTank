@@ -198,6 +198,22 @@ document.addEventListener("keyup", (e) => {
     // keyManager.updateStatusByKeyCode(e.keyCode, false)
 })
 
+// const loop = () => {
+//     console.log(123)
+//     update()
+//     draw()
+//     requestAnimationFrame(loop)
+// }
+// loop()
+
+// function loop(){
+//     draw()
+//     update()
+//     requestAnimationFrame(loop)
+// }
+
+// loop()
+
 setInterval(() => {
     update()
     draw()
@@ -214,19 +230,19 @@ function update(){
         socket.emit("player-move", { sinE, cosE })
     }
     //update shot
-    const { users } = gameStateManager.getState()
-    const mySocketId = userManager.getState().socketId
-    const me = users[mySocketId]
-    const { btnPressed } = touchPadManager.getStatus()
-    if(btnPressed){
-        socket.emit("player-shot", {
-            sinE : me.sinE, 
-            cosE : me.cosE,
-            x : me.x,
-            y : me.y,
-        })
-        touchPadManager.deactivePressed()
-    }
+    // const { users } = gameStateManager.getState()
+    // const mySocketId = userManager.getState().socketId
+    // const me = users[mySocketId]
+    // const { btnPressed } = touchPadManager.getStatus()
+    // if(btnPressed){
+    //     socket.emit("player-shot", {
+    //         sinE : me.sinE, 
+    //         cosE : me.cosE,
+    //         x : me.x,
+    //         y : me.y,
+    //     })
+    //     touchPadManager.deactivePressed()
+    // }
 }
 
 function draw(){

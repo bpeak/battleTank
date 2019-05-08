@@ -22,7 +22,6 @@ const GameStateManager = () => {
     }
     const updateState = (newState) => {
         state = Object.assign(state, newState)
-        console.log(state.shots)
     }
     const startGame = () => {
         isStarted = true
