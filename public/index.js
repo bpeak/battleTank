@@ -1,7 +1,30 @@
 const socket = io()
-// socket.emit("ready", { test : 123 })
+
+const gameStateManager = (() => {
+    let state = {}
+    const getState = () => state
+    const updateState = (newState) => {
+        state = Object.assign(state, newState)
+    }
+    return ({
+        getState,
+        updateState,
+    })
+})()
+
+socket.on("state-new", (newState) => {
+    gameStateManager.updateState(newState)
+})
+
+socket.emit("player-new")
+
 socket.on("newState", (data) => {
-    console.log(data)
+
+})
+
+socket.on("state-init", data => {
+    gameStateManager.updateState(data.state)
+    console.log(gameStateManager.getState().users)
 })
 
 const mainCanvas = document.getElementById("mainCanvas")
@@ -18,6 +41,7 @@ const log = (data) => {
 }
 
 const userManager = (() => {
+    let speed = 5
     let x = 0
     let y = 0
     const updateStatus = (n) => {
@@ -270,9 +294,12 @@ function update(){
     const { sinE, cosE } = touchPadManager.getStatus()
     //update User position
     const currentUser = userManager.getStatus()
-    const nextUserX = currentUser.x + cosE * 5
-    const nextUserY = currentUser.y + sinE * 5
-    userManager.updateStatus({ x : nextUserX, y : nextUserY })
+    if(sinE !== 0 || cosE !== 0){
+        socket.emit("player-move", { sinE, cosE })
+    }
+    // const nextUserX = currentUser.x + cosE * 5
+    // const nextUserY = currentUser.y + sinE * 5
+    // userManager.updateStatus({ x : nextUserX, y : nextUserY })
 }
 
 function draw(){
@@ -305,9 +332,12 @@ function draw(){
     //touchPad btn
     bufferCtx.fillRect(btnX, btnY, btnWidth, btnHeight)
 
-
-
     //draw user
+    const { maps, users } = gameStateManager.getState()
+    for(let socketId in users){
+        const { x, y } = users[socketId]
+        bufferCtx.fillRect(x, y, 200, 200)
+    }
     const userStatus = userManager.getStatus()
     bufferCtx.fillRect(userStatus.x, userStatus.y, 100, 100)
 
