@@ -32,7 +32,7 @@ const userManager = UserManager()
 const imageManager = ImageManager()
 
 //create socket
-const socket = io("172.30.1.30")
+const socket = io("222.120.226.111")
 
 socket.on("state-init", async (data) => {
     try{

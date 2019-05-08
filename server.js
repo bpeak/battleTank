@@ -168,7 +168,7 @@ function User({
     this.cosE = 0
 }
 
-const speed = 2
+const speed = 5
 
 User.prototype.updateDirection = function({
     sinE,
